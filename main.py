@@ -1,9 +1,11 @@
-
-for x in range(0,8):
+# functionality to select relevant data from a R&S FSH8 Spectrum Analyzer sweep and store only the value pairs of the actual measurement in a csv file
+for x in range(1, 11):
 
     # file paths of existing and new file
-    exPath = 'E:/Clara/Studium/Master/MA/201905_SpecAnalyzer/Wohnz/20190526_2412MHz_40MHz_' + str(x) + 'm.txt'
-    newPath = 'E:/Clara/Studium/Master/MA/201905_SpecAnalyzer/Wohnz/20190526_2412MHz_40MHz_' + str(x) + 'm.csv'
+    exPath = "E:/Clara/Studium/Master/MA/Messungen/20190613_Kalibrierung/WLAN/20190624/SA/21m2/20190624_2432MHz_40MHz_21m_" + str(
+        x).zfill(2) + ".txt"
+    newPath = "E:/Clara/Studium/Master/MA/Messungen/20190613_Kalibrierung/WLAN/20190624/SA/21m2/20190624_2432MHz_40MHz_21m_" + str(
+        x).zfill(2) + ".csv"
     print(exPath)
     # open existing and new file
     ef = open(exPath, 'r')
@@ -20,7 +22,7 @@ for x in range(0,8):
     for line in ef_lines:
         counter += 1
         # show current line
-        #print(line)
+        # print(line)
         # find 'Freq.' in line to find start of relevant data
         result = line.find('Freq.')
         # when 'Freq.' was found, set variables
@@ -29,33 +31,34 @@ for x in range(0,8):
             counter2 = counter
         # filter data, when criteria meet (every line of data after 'Freq.' line
         if (check and counter > counter2):
-            help = ''
+            tmp = ''
             # go through line, char by char
             counter3 = 0
             for char in line:
                 # when special char, save help2 into value and reset
                 if (char == '\t'):
                     if (counter3 == 0):
-                        help += ';'
-                        value += help
+                        tmp += ';'
+                        value += tmp
                         counter3 = 1
-                        help = ''
+                        tmp = ''
                 elif (char == '\n'):
-                    print('help: ', help)
-                    help += char
-                    value += help
-                    help = ''
-                elif ( char == ','):
-                    help += '.'
-                    value += help
-                    help = ''
+                    # print('tmp: ', tmp)
+                    tmp += char
+                    value += tmp
+                    tmp = ''
+                elif (char == ','):
+                    tmp += '.'
+                    value += tmp
+                    tmp = ''
                 else:
                     # save char in help2
-                    help += char
+                    tmp += char
             # write value (relevant data) into new file
             nf.write(value)
-            #print('value: ', value)
+            # print('value: ', value)
             value = ''
     # close all open files
     ef.close()
     nf.close()
+    print("New file written: ", newPath)
